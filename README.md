@@ -39,13 +39,13 @@ Do not import private helpers from other modules; use `get_growth_config()` for 
 Install from Git (replace the URL and ref with your fork or tag):
 
 ```bash
-pip install "django-growth @ git+https://github.com/your-org/django-growth.git@v0.1.0"
+pip install "django-growth @ git+https://github.com/marobo/django_growth.git@v0.1.0"
 ```
 
 Or add to `requirements.txt`:
 
 ```text
-django-growth @ git+https://github.com/your-org/django-growth.git@v0.1.0
+django-growth @ git+https://github.com/marobo/django_growth.git@v0.1.0
 ```
 
 ## Quick start
