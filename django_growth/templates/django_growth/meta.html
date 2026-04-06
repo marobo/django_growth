@@ -1,0 +1,44 @@
+{% if page_title %}
+<title>{{ page_title }}</title>
+{% endif %}
+{% if meta_description %}
+<meta name="description" content="{{ meta_description }}">
+{% endif %}
+{% if robots %}
+<meta name="robots" content="{{ robots }}">
+{% endif %}
+{% if canonical_url %}
+<link rel="canonical" href="{{ canonical_url }}">
+{% endif %}
+
+{% if site_name %}
+<meta property="og:site_name" content="{{ site_name }}">
+{% endif %}
+{% if og_title %}
+<meta property="og:title" content="{{ og_title }}">
+{% endif %}
+{% if og_description %}
+<meta property="og:description" content="{{ og_description }}">
+{% endif %}
+<meta property="og:type" content="{{ og_type }}">
+{% if og_url %}
+<meta property="og:url" content="{{ og_url }}">
+{% endif %}
+{% if og_image %}
+<meta property="og:image" content="{{ og_image }}">
+{% endif %}
+
+<meta name="twitter:card" content="{{ twitter_card }}">
+{% if og_title %}
+<meta name="twitter:title" content="{{ og_title }}">
+{% endif %}
+{% if og_description %}
+<meta name="twitter:description" content="{{ og_description }}">
+{% endif %}
+{% if og_image %}
+<meta name="twitter:image" content="{{ og_image }}">
+{% endif %}
+
+{% if show_google_verification %}
+<meta name="google-site-verification" content="{{ google_verification }}">
+{% endif %}
