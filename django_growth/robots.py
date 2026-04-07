@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from django.urls import reverse
+from django.urls import NoReverseMatch, reverse
 
 from django_growth.config import GrowthConfig
 
@@ -24,7 +24,11 @@ def build_robots_txt(
         lines.append("Allow: /")
 
     if config.robots_include_sitemap and not config.robots_disallow_all:
-        sitemap_url = request.build_absolute_uri(reverse(sitemap_url_name))
-        lines.append(f"Sitemap: {sitemap_url}")
+        try:
+            sitemap_url = request.build_absolute_uri(reverse(sitemap_url_name))
+        except NoReverseMatch:
+            pass
+        else:
+            lines.append(f"Sitemap: {sitemap_url}")
 
     return "\n".join(lines) + "\n"

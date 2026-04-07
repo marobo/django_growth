@@ -42,6 +42,14 @@ class GrowthConfigTests(SimpleTestCase):
         self.assertIn("x", c.sitemaps)
         self.assertFalse(c.robots_disallow_all)
         self.assertFalse(c.robots_include_sitemap)
+        self.assertEqual(c.default_og_image, "")
+
+    @override_settings(
+        GROWTH={"DEFAULT_OG_IMAGE": " https://cdn.example/og.png "}, DEBUG=True
+    )
+    def test_default_og_image_normalized(self):
+        c = get_growth_config()
+        self.assertEqual(c.default_og_image, "https://cdn.example/og.png")
 
     @override_settings(GROWTH={"GTM_ID": "GTM-1"}, DEBUG=False)
     def test_gtm_snippets_enabled(self):

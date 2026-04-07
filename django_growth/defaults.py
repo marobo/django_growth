@@ -8,6 +8,7 @@ Host projects override via ``settings.GROWTH`` (dict). Unknown keys are ignored.
 DEFAULT_GTM_ID = ""
 DEFAULT_SITE_NAME = ""
 DEFAULT_GOOGLE_VERIFICATION = ""
+DEFAULT_OG_IMAGE = ""
 
 # Inferred from ``settings.DEBUG`` when ENV is omitted or blank
 ENV_DEVELOPMENT = "development"

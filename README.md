@@ -27,7 +27,7 @@ These names and shapes are intended to stay stable across minor releases:
 |--------|-----------|
 | **Settings** | `GROWTH` dict on `django.conf.settings` (see below). Unknown keys are ignored. |
 | **Python** | `django_growth.config.get_growth_config()`, `get_growth_config_for_request(request)`, and `GrowthConfig` (fields + `gtm_snippets_enabled`, `as_template_context()`). |
-| **Context** | `growth` mapping with `GTM_ID`, `SITE_NAME`, `ENV`, `GOOGLE_VERIFICATION` (from the context processor). |
+| **Context** | `growth` mapping with `GTM_ID`, `SITE_NAME`, `ENV`, `GOOGLE_VERIFICATION`, `DEFAULT_OG_IMAGE` (from the context processor). |
 | **Template tags** | `{% load growth_tags %}` → `growth_meta`, `growth_gtm`, `growth_gtm_body`, `growth_analytics`. |
 | **URLs** | `path("", include("django_growth.urls"))` → `django_growth:robots_txt`, `django_growth:sitemap`. |
 | **System checks** | `django_growth.W001` (production without GTM ID), `django_growth.W002` (verification token shape). |
@@ -84,6 +84,8 @@ GROWTH = {
         # "pages": PagesSitemap,
         # "blog": BlogSitemap,
     },
+    # Site-wide default for Open Graph / Twitter image when a page omits og_image:
+    # "DEFAULT_OG_IMAGE": "https://your-domain.com/static/og-default.png",
     # Optional robots behavior (defaults are safe for local dev):
     # "ROBOTS_DISALLOW_ALL": True,
     # "ROBOTS_INCLUDE_SITEMAP": True,
@@ -96,12 +98,14 @@ GROWTH = {
 | `SITE_NAME` | `str` | `""` |
 | `ENV` | `str` | `development` if `DEBUG` else `production` when omitted or blank |
 | `GOOGLE_VERIFICATION` | `str` | `""` — HTML-tag token only |
+| `DEFAULT_OG_IMAGE` | `str` | `""` — absolute URL; used by `{% growth_meta %}` when `og_image` is omitted (satisfies tools that require `og:image`) |
 | `SITEMAPS` | `dict` | `{}` — section name → `Sitemap` class or instance; non-dict ignored |
 | `ROBOTS_DISALLOW_ALL` | `bool` | `DEBUG` when omitted |
 | `ROBOTS_INCLUDE_SITEMAP` | `bool` | `True` |
 
 - **`ENV`**: GTM snippets render only when `ENV == "production"` and `GTM_ID` is non-empty (`GrowthConfig.gtm_snippets_enabled`).
 - **`ROBOTS_DISALLOW_ALL`**: When `True`, emits `Disallow: /` and omits `Sitemap:`.
+- **`DEFAULT_OG_IMAGE`**: Many crawlers and share debuggers treat `og:image` as required once other Open Graph tags are present. Set this to a default logo or hero image URL, or pass `og_image` on each `{% growth_meta %}` call.
 
 ### 4. URLs
 
@@ -113,6 +117,12 @@ urlpatterns = [
 ```
 
 This exposes **`/robots.txt`** and **`/sitemap.xml`** (adjust the mount prefix if you include under a path).
+
+#### If SEO tools report “robots.txt check failed”
+
+- Confirm **`path("", include("django_growth.urls"))`** is active (often at the **root** of `urlpatterns` so the live URL is `https://your-domain/robots.txt`, not only under a subpath).
+- Ensure the checker’s hostname is allowed (**`ALLOWED_HOSTS`** in Django, and any reverse proxy).
+- With **`DEBUG = True`**, the default is **`ROBOTS_DISALLOW_ALL`** equal to **`True`** (`Disallow: /`), which is correct for local/staging but some external “verification” products still flag it. For a crawlable production site, set **`DEBUG = False`** and either omit **`ROBOTS_DISALLOW_ALL`** or set it to **`False`**.
 
 ## Usage in templates
 
@@ -138,7 +148,7 @@ This exposes **`/robots.txt`** and **`/sitemap.xml`** (adjust the mount prefix i
 - Place **`{% growth_gtm %}`** early in `<head>` and **`{% growth_gtm_body %}`** immediately after `<body>` per Google’s GTM documentation.
 - **`{% growth_meta %}`** accepts optional arguments such as `og_image`, `canonical_url`, `robots`, and `site_title_suffix`—see the template tag implementation in your installed version.
 
-Template context includes **`growth`** (from the context processor) with `GTM_ID`, `SITE_NAME`, `ENV`, and `GOOGLE_VERIFICATION`.
+Template context includes **`growth`** (from the context processor) with `GTM_ID`, `SITE_NAME`, `ENV`, `GOOGLE_VERIFICATION`, and `DEFAULT_OG_IMAGE`.
 
 ## Frontend analytics (`trackEvent`)
 

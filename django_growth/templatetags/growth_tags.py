@@ -52,9 +52,11 @@ def growth_meta(
 
     title = "" if title is None else str(title).strip()
     description = _blank_str(description)
-    og_image = _blank_str(og_image)
+    og_image = _blank_str(og_image) or config.default_og_image
     og_type = _blank_str(og_type) or "website"
     twitter_card = _blank_str(twitter_card) or "summary_large_image"
+    if not og_image and twitter_card == "summary_large_image":
+        twitter_card = "summary"
     robots = None if robots is None else str(robots).strip()
     if robots == "":
         robots = None

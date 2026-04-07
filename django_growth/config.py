@@ -8,6 +8,7 @@ from django.conf import settings
 from django_growth.defaults import (
     DEFAULT_GOOGLE_VERIFICATION,
     DEFAULT_GTM_ID,
+    DEFAULT_OG_IMAGE,
     DEFAULT_SITE_NAME,
     ENV_DEVELOPMENT,
     ENV_PRODUCTION,
@@ -36,6 +37,7 @@ class GrowthConfig:
     site_name: str
     env: str
     google_verification: str
+    default_og_image: str
     sitemaps: dict[str, Any]
     robots_disallow_all: bool
     robots_include_sitemap: bool
@@ -52,6 +54,7 @@ class GrowthConfig:
             "SITE_NAME": self.site_name,
             "ENV": self.env,
             "GOOGLE_VERIFICATION": self.google_verification,
+            "DEFAULT_OG_IMAGE": self.default_og_image,
         }
 
 
@@ -60,6 +63,9 @@ def _build_growth_config(raw: dict[str, Any], *, debug: bool) -> GrowthConfig:
     site_name = _blank_str(raw.get("SITE_NAME", DEFAULT_SITE_NAME))
     google_verification = _blank_str(
         raw.get("GOOGLE_VERIFICATION", DEFAULT_GOOGLE_VERIFICATION)
+    )
+    default_og_image = _blank_str(
+        raw.get("DEFAULT_OG_IMAGE", DEFAULT_OG_IMAGE)
     )
 
     env_raw = raw.get("ENV", None)
@@ -80,6 +86,7 @@ def _build_growth_config(raw: dict[str, Any], *, debug: bool) -> GrowthConfig:
         site_name=site_name,
         env=env,
         google_verification=google_verification,
+        default_og_image=default_og_image,
         sitemaps=dict(sitemaps),
         robots_disallow_all=robots_disallow_all,
         robots_include_sitemap=robots_include_sitemap,
