@@ -14,6 +14,6 @@ def growth_sitemap(request):
 
 
 urlpatterns = [
-    path("robots.txt", views.robots_txt, name="robots_txt"),
+    path("robots.txt", views.RobotsTxtView.as_view(), name="robots_txt"),
     path("sitemap.xml", growth_sitemap, name="sitemap"),
 ]

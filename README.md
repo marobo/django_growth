@@ -120,9 +120,16 @@ This exposes **`/robots.txt`** and **`/sitemap.xml`** (adjust the mount prefix i
 
 #### If SEO tools report “robots.txt check failed”
 
-- Confirm **`path("", include("django_growth.urls"))`** is active (often at the **root** of `urlpatterns` so the live URL is `https://your-domain/robots.txt`, not only under a subpath).
-- Ensure the checker’s hostname is allowed (**`ALLOWED_HOSTS`** in Django, and any reverse proxy).
-- With **`DEBUG = True`**, the default is **`ROBOTS_DISALLOW_ALL`** equal to **`True`** (`Disallow: /`), which is correct for local/staging but some external “verification” products still flag it. For a crawlable production site, set **`DEBUG = False`** and either omit **`ROBOTS_DISALLOW_ALL`** or set it to **`False`**.
+“Unable to verify” almost always means the checker never got a normal **HTTP 200** response body from **`https://your-domain/robots.txt`** (wrong URL, 404, 400, 500, timeout, TLS, or something in front of Django blocking the request).
+
+1. **Exact URL** — The standard location is **`/robots.txt`** at the **site root** (not only under e.g. `/app/robots.txt` unless you intend that). Mount **`include("django_growth.urls")`** accordingly.
+2. **Prove it locally** — With your production settings (or staging), run:
+   - `curl -sS -D - -o /dev/null https://your-domain/robots.txt`
+   - `curl -sS -D - -o /dev/null -X HEAD https://your-domain/robots.txt`  
+   You want **200** for both GET and HEAD. This app implements HEAD explicitly for tools that probe with HEAD first.
+3. **`ALLOWED_HOSTS`** — A bad or missing `Host` yields **400 DisallowedHost**; remote checkers then “can’t verify”.
+4. **Reverse proxy / CDN** — Ensure **`/robots.txt`** is forwarded to Django (not a stale static file, empty 404, or WAF blocking the checker’s IP or user-agent).
+5. **`DEBUG = True`** — Defaults **`ROBOTS_DISALLOW_ALL`** to **`True`** (`Disallow: /`). That is fine for local dev; for production use **`DEBUG = False`** and set **`ROBOTS_DISALLOW_ALL`** how you want. Some SEO UIs still show warnings when everything is disallowed even though `robots.txt` itself is valid.
 
 ## Usage in templates
 
