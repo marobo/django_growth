@@ -8,8 +8,14 @@ from django.conf import settings
 from django_growth.defaults import (
     DEFAULT_GOOGLE_VERIFICATION,
     DEFAULT_GTM_ID,
+    DEFAULT_META_AUTHOR,
+    DEFAULT_META_KEYWORDS,
+    DEFAULT_META_VIEWPORT,
     DEFAULT_OG_IMAGE,
+    DEFAULT_OG_LOCALE,
     DEFAULT_SITE_NAME,
+    DEFAULT_TWITTER_CREATOR,
+    DEFAULT_TWITTER_SITE,
     ENV_DEVELOPMENT,
     ENV_PRODUCTION,
 )
@@ -38,6 +44,12 @@ class GrowthConfig:
     env: str
     google_verification: str
     default_og_image: str
+    meta_viewport: str
+    meta_keywords: str
+    meta_author: str
+    og_locale: str
+    twitter_site: str
+    twitter_creator: str
     sitemaps: dict[str, Any]
     robots_disallow_all: bool
     robots_include_sitemap: bool
@@ -55,6 +67,12 @@ class GrowthConfig:
             "ENV": self.env,
             "GOOGLE_VERIFICATION": self.google_verification,
             "DEFAULT_OG_IMAGE": self.default_og_image,
+            "META_VIEWPORT": self.meta_viewport,
+            "META_KEYWORDS": self.meta_keywords,
+            "META_AUTHOR": self.meta_author,
+            "OG_LOCALE": self.og_locale,
+            "TWITTER_SITE": self.twitter_site,
+            "TWITTER_CREATOR": self.twitter_creator,
         }
 
 
@@ -67,6 +85,12 @@ def _build_growth_config(raw: dict[str, Any], *, debug: bool) -> GrowthConfig:
     default_og_image = _blank_str(
         raw.get("DEFAULT_OG_IMAGE", DEFAULT_OG_IMAGE)
     )
+    meta_viewport = _blank_str(raw.get("META_VIEWPORT", DEFAULT_META_VIEWPORT))
+    meta_keywords = _blank_str(raw.get("META_KEYWORDS", DEFAULT_META_KEYWORDS))
+    meta_author = _blank_str(raw.get("META_AUTHOR", DEFAULT_META_AUTHOR))
+    og_locale = _blank_str(raw.get("OG_LOCALE", DEFAULT_OG_LOCALE))
+    twitter_site = _blank_str(raw.get("TWITTER_SITE", DEFAULT_TWITTER_SITE))
+    twitter_creator = _blank_str(raw.get("TWITTER_CREATOR", DEFAULT_TWITTER_CREATOR))
 
     env_raw = raw.get("ENV", None)
     if env_raw is None or _blank_str(env_raw) == "":
@@ -87,6 +111,12 @@ def _build_growth_config(raw: dict[str, Any], *, debug: bool) -> GrowthConfig:
         env=env,
         google_verification=google_verification,
         default_og_image=default_og_image,
+        meta_viewport=meta_viewport,
+        meta_keywords=meta_keywords,
+        meta_author=meta_author,
+        og_locale=og_locale,
+        twitter_site=twitter_site,
+        twitter_creator=twitter_creator,
         sitemaps=dict(sitemaps),
         robots_disallow_all=robots_disallow_all,
         robots_include_sitemap=robots_include_sitemap,

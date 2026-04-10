@@ -11,6 +11,13 @@ def _blank_str(value):
     return str(value).strip()
 
 
+def _config_or_tag(override, config_value):
+    """If override is not None, use stripped override; else use config (stripped)."""
+    if override is not None:
+        return _blank_str(override)
+    return _blank_str(config_value)
+
+
 def _config(context):
     request = context.get("request")
     return get_growth_config_for_request(request)
@@ -45,10 +52,23 @@ def growth_meta(
     twitter_card="summary_large_image",
     robots=None,
     site_title_suffix=True,
+    viewport=None,
+    keywords=None,
+    author=None,
+    og_locale=None,
+    twitter_site=None,
+    twitter_creator=None,
 ):
     config = _config(context)
     site_name = config.site_name
     google_verification = config.google_verification
+
+    meta_viewport = _config_or_tag(viewport, config.meta_viewport)
+    meta_keywords = _config_or_tag(keywords, config.meta_keywords)
+    meta_author = _config_or_tag(author, config.meta_author)
+    resolved_og_locale = _config_or_tag(og_locale, config.og_locale)
+    resolved_twitter_site = _config_or_tag(twitter_site, config.twitter_site)
+    resolved_twitter_creator = _config_or_tag(twitter_creator, config.twitter_creator)
 
     title = "" if title is None else str(title).strip()
     description = _blank_str(description)
@@ -81,14 +101,20 @@ def growth_meta(
 
     return {
         "page_title": page_title,
+        "meta_viewport": meta_viewport,
         "meta_description": description,
+        "meta_keywords": meta_keywords,
+        "meta_author": meta_author,
         "canonical_url": page_url,
         "og_title": og_title,
         "og_description": og_description,
         "og_image": og_image,
         "og_type": og_type,
         "og_url": page_url,
+        "og_locale": resolved_og_locale,
         "site_name": site_name,
+        "twitter_site": resolved_twitter_site,
+        "twitter_creator": resolved_twitter_creator,
         "twitter_card": twitter_card,
         "robots": robots,
         "google_verification": google_verification,

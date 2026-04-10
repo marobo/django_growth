@@ -89,6 +89,13 @@ GROWTH = {
     # Optional robots behavior (defaults are safe for local dev):
     # "ROBOTS_DISALLOW_ALL": True,
     # "ROBOTS_INCLUDE_SITEMAP": True,
+    # Optional SEO / social (all omitted or empty = tag not rendered):
+    # "META_VIEWPORT": "width=device-width, initial-scale=1.0",
+    # "META_KEYWORDS": "comma, separated, terms",
+    # "META_AUTHOR": "Site author",
+    # "OG_LOCALE": "en_US",
+    # "TWITTER_SITE": "@yourbrand",
+    # "TWITTER_CREATOR": "@yourhandle",
 }
 ```
 
@@ -99,6 +106,12 @@ GROWTH = {
 | `ENV` | `str` | `development` if `DEBUG` else `production` when omitted or blank |
 | `GOOGLE_VERIFICATION` | `str` | `""` — HTML-tag token only |
 | `DEFAULT_OG_IMAGE` | `str` | `""` — absolute URL; used by `{% growth_meta %}` when `og_image` is omitted (satisfies tools that require `og:image`) |
+| `META_VIEWPORT` | `str` | `""` — e.g. `width=device-width, initial-scale=1.0`; emits `<meta name="viewport">` when non-empty |
+| `META_KEYWORDS` | `str` | `""` — optional `<meta name="keywords">` (little SEO impact on major engines) |
+| `META_AUTHOR` | `str` | `""` — optional `<meta name="author">` |
+| `OG_LOCALE` | `str` | `""` — e.g. `en_US` for `og:locale` |
+| `TWITTER_SITE` | `str` | `""` — e.g. `@brand` for `twitter:site` |
+| `TWITTER_CREATOR` | `str` | `""` — e.g. `@author` for `twitter:creator` |
 | `SITEMAPS` | `dict` | `{}` — section name → `Sitemap` class or instance; non-dict ignored |
 | `ROBOTS_DISALLOW_ALL` | `bool` | `DEBUG` when omitted |
 | `ROBOTS_INCLUDE_SITEMAP` | `bool` | `True` |
@@ -130,6 +143,7 @@ This exposes **`/robots.txt`** and **`/sitemap.xml`** (adjust the mount prefix i
 3. **`ALLOWED_HOSTS`** — A bad or missing `Host` yields **400 DisallowedHost**; remote checkers then “can’t verify”.
 4. **Reverse proxy / CDN** — Ensure **`/robots.txt`** is forwarded to Django (not a stale static file, empty 404, or WAF blocking the checker’s IP or user-agent).
 5. **`DEBUG = True`** — Defaults **`ROBOTS_DISALLOW_ALL`** to **`True`** (`Disallow: /`). That is fine for local dev; for production use **`DEBUG = False`** and set **`ROBOTS_DISALLOW_ALL`** how you want. Some SEO UIs still show warnings when everything is disallowed even though `robots.txt` itself is valid.
+6. **Do not serve `robots.txt` / `sitemap.xml` with `TemplateView`** pointing at files under **`static/`**. `TemplateView` only loads from **template engines** (e.g. `templates/`). If the path does not exist as a template, Django raises **`TemplateDoesNotExist`** → **500**. Remove those URL patterns and rely on **`include("django_growth.urls")`** (or put real templates under `templates/` if you truly want a static template-only robots file). For **`favicon.ico`**, use **`django.contrib.staticfiles`**, **`RedirectView`** to a static URL, or your CDN—not a missing template name.
 
 ## Usage in templates
 
@@ -153,9 +167,9 @@ This exposes **`/robots.txt`** and **`/sitemap.xml`** (adjust the mount prefix i
 - Provide **`page_title`** and **`page_description`** from the view or via template blocks.
 - Place **`{% growth_analytics %}`** before **`{% growth_gtm %}`** so `dataLayer` exists before the GTM bootstrap script runs.
 - Place **`{% growth_gtm %}`** early in `<head>` and **`{% growth_gtm_body %}`** immediately after `<body>` per Google’s GTM documentation.
-- **`{% growth_meta %}`** accepts optional arguments such as `og_image`, `canonical_url`, `robots`, and `site_title_suffix`—see the template tag implementation in your installed version.
+- **`{% growth_meta %}`** accepts optional arguments such as `og_image`, `canonical_url`, `robots`, `site_title_suffix`, and per-page overrides `viewport`, `keywords`, `author`, `og_locale`, `twitter_site`, and `twitter_creator` (each overrides the matching `GROWTH` value for that render; pass an empty string to omit a tag even when `GROWTH` sets it).
 
-Template context includes **`growth`** (from the context processor) with `GTM_ID`, `SITE_NAME`, `ENV`, `GOOGLE_VERIFICATION`, and `DEFAULT_OG_IMAGE`.
+Template context includes **`growth`** (from the context processor) with `GTM_ID`, `SITE_NAME`, `ENV`, `GOOGLE_VERIFICATION`, `DEFAULT_OG_IMAGE`, `META_VIEWPORT`, `META_KEYWORDS`, `META_AUTHOR`, `OG_LOCALE`, `TWITTER_SITE`, and `TWITTER_CREATOR`.
 
 ## Frontend analytics (`trackEvent`)
 
