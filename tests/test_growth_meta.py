@@ -28,3 +28,46 @@ class GrowthMetaTagTests(TestCase):
             Context({"request": self.request})
         )
         self.assertIn('name="twitter:card" content="summary"', html)
+
+    @override_settings(
+        GROWTH={
+            "META_VIEWPORT": "width=device-width, initial-scale=1.0",
+            "META_KEYWORDS": "one, two",
+            "META_AUTHOR": "Author",
+            "OG_LOCALE": "en_US",
+            "TWITTER_SITE": "@site",
+            "TWITTER_CREATOR": "@creator",
+        }
+    )
+    def test_growth_meta_emits_config_meta_social_tags(self):
+        html = Template(
+            "{% load growth_tags %}{% growth_meta title='T' description='D' %}"
+        ).render(Context({"request": self.request}))
+        self.assertIn('name="viewport" content="width=device-width, initial-scale=1.0"', html)
+        self.assertIn('name="keywords" content="one, two"', html)
+        self.assertIn('name="author" content="Author"', html)
+        self.assertIn('property="og:locale" content="en_US"', html)
+        self.assertIn('name="twitter:site" content="@site"', html)
+        self.assertIn('name="twitter:creator" content="@creator"', html)
+
+    @override_settings(
+        GROWTH={
+            "META_KEYWORDS": "from settings",
+            "TWITTER_SITE": "@settings",
+        }
+    )
+    def test_growth_meta_tag_args_override_config(self):
+        html = Template(
+            "{% load growth_tags %}"
+            "{% growth_meta title='T' keywords='from tag' twitter_site='@tag' %}"
+        ).render(Context({"request": self.request}))
+        self.assertIn('name="keywords" content="from tag"', html)
+        self.assertNotIn("from settings", html)
+        self.assertIn('name="twitter:site" content="@tag"', html)
+
+    @override_settings(GROWTH={"META_KEYWORDS": "from settings"})
+    def test_empty_keywords_arg_suppresses_meta_keywords(self):
+        html = Template(
+            "{% load growth_tags %}{% growth_meta title='T' keywords='' %}"
+        ).render(Context({"request": self.request}))
+        self.assertNotIn("keywords", html)

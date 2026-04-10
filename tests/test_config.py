@@ -51,6 +51,26 @@ class GrowthConfigTests(SimpleTestCase):
         c = get_growth_config()
         self.assertEqual(c.default_og_image, "https://cdn.example/og.png")
 
+    @override_settings(
+        GROWTH={
+            "META_VIEWPORT": " width=device-width, initial-scale=1.0 ",
+            "META_KEYWORDS": " a, b ",
+            "META_AUTHOR": " Jane ",
+            "OG_LOCALE": " en_US ",
+            "TWITTER_SITE": " @brand ",
+            "TWITTER_CREATOR": " @me ",
+        },
+        DEBUG=True,
+    )
+    def test_meta_and_social_strings_normalized(self):
+        c = get_growth_config()
+        self.assertEqual(c.meta_viewport, "width=device-width, initial-scale=1.0")
+        self.assertEqual(c.meta_keywords, "a, b")
+        self.assertEqual(c.meta_author, "Jane")
+        self.assertEqual(c.og_locale, "en_US")
+        self.assertEqual(c.twitter_site, "@brand")
+        self.assertEqual(c.twitter_creator, "@me")
+
     @override_settings(GROWTH={"GTM_ID": "GTM-1"}, DEBUG=False)
     def test_gtm_snippets_enabled(self):
         c = get_growth_config()

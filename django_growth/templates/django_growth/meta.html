@@ -1,8 +1,17 @@
+{% if meta_viewport %}
+<meta name="viewport" content="{{ meta_viewport }}">
+{% endif %}
 {% if page_title %}
 <title>{{ page_title }}</title>
 {% endif %}
 {% if meta_description %}
 <meta name="description" content="{{ meta_description }}">
+{% endif %}
+{% if meta_keywords %}
+<meta name="keywords" content="{{ meta_keywords }}">
+{% endif %}
+{% if meta_author %}
+<meta name="author" content="{{ meta_author }}">
 {% endif %}
 {% if robots %}
 <meta name="robots" content="{{ robots }}">
@@ -21,6 +30,9 @@
 <meta property="og:description" content="{{ og_description }}">
 {% endif %}
 <meta property="og:type" content="{{ og_type }}">
+{% if og_locale %}
+<meta property="og:locale" content="{{ og_locale }}">
+{% endif %}
 {% if og_url %}
 <meta property="og:url" content="{{ og_url }}">
 {% endif %}
@@ -28,6 +40,12 @@
 <meta property="og:image" content="{{ og_image }}">
 {% endif %}
 
+{% if twitter_site %}
+<meta name="twitter:site" content="{{ twitter_site }}">
+{% endif %}
+{% if twitter_creator %}
+<meta name="twitter:creator" content="{{ twitter_creator }}">
+{% endif %}
 <meta name="twitter:card" content="{{ twitter_card }}">
 {% if og_title %}
 <meta name="twitter:title" content="{{ og_title }}">
