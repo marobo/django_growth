@@ -1,62 +1,65 @@
-{% if meta_viewport %}
-<meta name="viewport" content="{{ meta_viewport }}">
-{% endif %}
-{% if page_title %}
-<title>{{ page_title }}</title>
-{% endif %}
-{% if meta_description %}
-<meta name="description" content="{{ meta_description }}">
-{% endif %}
-{% if meta_keywords %}
-<meta name="keywords" content="{{ meta_keywords }}">
-{% endif %}
-{% if meta_author %}
-<meta name="author" content="{{ meta_author }}">
-{% endif %}
-{% if robots %}
-<meta name="robots" content="{{ robots }}">
-{% endif %}
-{% if canonical_url %}
-<link rel="canonical" href="{{ canonical_url }}">
-{% endif %}
-
-{% if site_name %}
-<meta property="og:site_name" content="{{ site_name }}">
-{% endif %}
-{% if og_title %}
-<meta property="og:title" content="{{ og_title }}">
-{% endif %}
-{% if og_description %}
-<meta property="og:description" content="{{ og_description }}">
-{% endif %}
-<meta property="og:type" content="{{ og_type }}">
-{% if og_locale %}
-<meta property="og:locale" content="{{ og_locale }}">
-{% endif %}
-{% if og_url %}
-<meta property="og:url" content="{{ og_url }}">
-{% endif %}
-{% if og_image %}
-<meta property="og:image" content="{{ og_image }}">
-{% endif %}
-
-{% if twitter_site %}
-<meta name="twitter:site" content="{{ twitter_site }}">
-{% endif %}
-{% if twitter_creator %}
-<meta name="twitter:creator" content="{{ twitter_creator }}">
-{% endif %}
-<meta name="twitter:card" content="{{ twitter_card }}">
-{% if og_title %}
-<meta name="twitter:title" content="{{ og_title }}">
-{% endif %}
-{% if og_description %}
-<meta name="twitter:description" content="{{ og_description }}">
-{% endif %}
-{% if og_image %}
-<meta name="twitter:image" content="{{ og_image }}">
-{% endif %}
-
-{% if show_google_verification %}
-<meta name="google-site-verification" content="{{ google_verification }}">
-{% endif %}
+{% spaceless %}
+    {% if meta_viewport %}
+        <meta name="viewport" content="{{ meta_viewport }}">
+    {% endif %}
+    {% if page_title %}
+        <title>{{ page_title }}</title>
+    {% endif %}
+    {% if meta_description %}
+        <meta name="description" content="{{ meta_description }}">
+    {% endif %}
+    {% if meta_keywords %}
+        <meta name="keywords" content="{{ meta_keywords }}">
+    {% endif %}
+    {% if meta_author %}
+        <meta name="author" content="{{ meta_author }}">
+    {% endif %}
+    {% if robots %}
+        <meta name="robots" content="{{ robots }}">
+    {% endif %}
+    {% if canonical_url %}
+        <link rel="canonical" href="{{ canonical_url }}">
+    {% endif %}
+    {% if site_name %}
+        <meta property="og:site_name" content="{{ site_name }}">
+    {% endif %}
+    {% if og_title %}
+        <meta property="og:title" content="{{ og_title }}">
+    {% endif %}
+    {% if og_description %}
+        <meta property="og:description" content="{{ og_description }}">
+    {% endif %}
+    {% if og_type %}
+        <meta property="og:type" content="{{ og_type }}">
+    {% endif %}
+    {% if og_locale %}
+        <meta property="og:locale" content="{{ og_locale }}">
+    {% endif %}
+    {% if og_url %}
+        <meta property="og:url" content="{{ og_url }}">
+    {% endif %}
+    {% if og_image %}
+        <meta property="og:image" content="{{ og_image }}">
+    {% endif %}
+    {% if twitter_site %}
+        <meta name="twitter:site" content="{{ twitter_site }}">
+    {% endif %}
+    {% if twitter_creator %}
+        <meta name="twitter:creator" content="{{ twitter_creator }}">
+    {% endif %}
+    {% if twitter_card %}
+        <meta name="twitter:card" content="{{ twitter_card }}">
+    {% endif %}
+    {% if og_title %}
+        <meta name="twitter:title" content="{{ og_title }}">
+    {% endif %}
+    {% if og_description %}
+        <meta name="twitter:description" content="{{ og_description }}">
+    {% endif %}
+    {% if og_image %}
+        <meta name="twitter:image" content="{{ og_image }}">
+    {% endif %}
+    {% if show_google_verification %}
+        <meta name="google-site-verification" content="{{ google_verification }}">
+    {% endif %}
+{% endspaceless %}
